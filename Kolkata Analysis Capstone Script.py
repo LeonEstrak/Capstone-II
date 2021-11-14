@@ -289,3 +289,56 @@ print('There are {} unique categories.'.format(
 
 # %%
 print('There are {}  categories.'.format(kl_venues['Venue Category'].unique()))
+
+# %% [markdown]
+# Lets group the data by neighborhood and taking the mean value of the frequency of occurrence of each category.
+
+# %%
+kl_grouped = kl_onehot.groupby('Neighborhood').mean().reset_index()
+print(kl_grouped.shape)
+kl_grouped
+
+# %% [markdown]
+# After removing the neighborhoods with less than 40 venues we are left with 54 neighborhoods and 102 unique categories
+
+# %%
+kl_grouped.shape
+
+# %% [markdown]
+#  The following function returns the top_venues of each neighborhood.
+
+# %%
+
+
+def return_most_common_venues(row, num_top_venues):
+    row_categories = row.iloc[1:]
+    row_categories_sorted = row_categories.sort_values(ascending=False)
+
+    return row_categories_sorted.index.values[0:num_top_venues]
+
+# %% [markdown]
+# Lets use the above function to obtaine the 10 most common venues in each neighborhood and store in the new pandas dataframe **neighborhoods_venues_sorted**.
+
+
+# %%
+num_top_venues = 10
+
+indicators = ['st', 'nd', 'rd']
+
+# create columns according to number of top venues
+columns = ['Neighborhood']
+for ind in np.arange(num_top_venues):
+    try:
+        columns.append('{}{} Most Common Venue'.format(ind+1, indicators[ind]))
+    except:
+        columns.append('{}th Most Common Venue'.format(ind+1))
+
+# create a new dataframe
+neighborhoods_venues_sorted = pd.DataFrame(columns=columns)
+neighborhoods_venues_sorted['Neighborhood'] = kl_grouped['Neighborhood']
+
+for ind in np.arange(kl_grouped.shape[0]):
+    neighborhoods_venues_sorted.iloc[ind, 1:] = return_most_common_venues(
+        kl_grouped.iloc[ind, :], num_top_venues)
+
+neighborhoods_venues_sorted.head()
