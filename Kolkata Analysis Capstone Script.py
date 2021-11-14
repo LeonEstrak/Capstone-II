@@ -226,3 +226,66 @@ kl_venues.groupby('Neighborhood').count()
 print('There are {} unique categories.'.format(
     len(kl_venues['Venue Category'].unique())))
 print('There are {}  categories.'.format(kl_venues['Venue Category'].unique()))
+
+# %% [markdown]
+# # Methodology
+#
+# We have the neighborhoods data of kolkata (65 total neighborhoods)and also have the most popular venues in each neighborhood obtained using Foursquare API (5016 venues). But we see that there are multiple neighborhoods with less than 40 venues returned. In order to make a good prediction and create a good analysis let's consider only the neighborhoods with more than 40 venues, as the neighborhoods with less than 40 venues are less popular and hence less populated. So as we want the new bussiness owner to make profit in thier ventures we should only consider neighborhoods which are popular.
+#
+# We can perform one hot encoding on the obtained data set and use it find the 10 most common venue category in each neighborhood. Then clustering can be performed on the dataset.
+# We are using the K - Means clustering technique. To find the optimal number of clusters silhouette score technique is used.
+#
+# The clusters obtained can be analyzed to find the major types of venue categories in each cluster. This data can be used to suggest business personnels suitable locations based on the category.
+#
+#
+
+# %%
+df = kl_venues.groupby(['Neighborhood'], sort=False)['Venue'].count()
+df.plot.bar(figsize=(18, 6))
+
+# %% [markdown]
+# The following plot shows only the neighborhoods from which 40 or more than 40 venues were obtained.
+
+# %%
+df = df[df >= 40]
+df.plot.bar(figsize=(18, 6))
+
+# %% [markdown]
+# Lets create a new dataframe, kl_venues_top that contains only the neighborhoods with 40 and above venues with their details included.
+
+# %%
+kl_venues_top = kl_venues[kl_venues['Neighborhood'].isin(df.index.tolist())]
+kl_venues_top.head()
+
+# %% [markdown]
+# #### One Hot Encoding
+#
+
+# %%
+
+kl_onehot = pd.get_dummies(
+    kl_venues_top['Venue Category'], prefix="", prefix_sep="")
+
+# add neighborhood column back to dataframe
+kl_onehot['Neighborhood'] = kl_venues_top['Neighborhood']
+
+# move neighborhood column to the first column
+fixed_columns = kl_onehot.columns.tolist()
+fixed_columns.insert(0, fixed_columns.pop(fixed_columns.index('Neighborhood')))
+kl_onehot = kl_onehot.reindex(columns=fixed_columns)
+
+print(kl_onehot.shape)
+kl_onehot.head()
+
+# %% [markdown]
+# Let's check the number of unique categories and their names of all the venues returned.
+#
+#
+
+# %%
+print('There are {} unique categories.'.format(
+    len(kl_venues['Venue Category'].unique())))
+
+
+# %%
+print('There are {}  categories.'.format(kl_venues['Venue Category'].unique()))
