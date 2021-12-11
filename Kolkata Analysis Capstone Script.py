@@ -342,3 +342,73 @@ for ind in np.arange(kl_grouped.shape[0]):
         kl_grouped.iloc[ind, :], num_top_venues)
 
 neighborhoods_venues_sorted.head()
+
+# %% [markdown]
+# **Cluster Neighborhoods**
+#
+# Here K-Means clustering technique is used. Lets use the silhouette_score to obtain the best value for the number of clusters.
+
+# %%
+kl_grouped_clustering = kl_grouped.drop('Neighborhood', 1)
+
+max_score = 25
+scores = []
+
+for kclusters in range(2, max_score):
+    # Run k-means clustering
+    kmeans = KMeans(n_clusters=kclusters, init='k-means++',
+                    random_state=0).fit_predict(kl_grouped_clustering)
+
+    # Gets the silhouette score
+    score = silhouette_score(kl_grouped_clustering, kmeans)
+    scores.append(score)
+
+plt.figure(figsize=(20, 10))
+plt.plot(np.arange(2, max_score), scores, 'ro-')
+plt.xlabel("Number of clusters")
+plt.ylabel("Silhouette Score")
+plt.xticks(np.arange(2, max_score))
+plt.show()
+
+# %% [markdown]
+# As seen from the above line plot, the best number of clusters having the **highest silhouette score** is **4**(as the peak is achieved).
+
+# %%
+
+kclusters = 4
+
+kl_grouped_clustering = kl_grouped.drop('Neighborhood', 1)
+
+# run k-means clustering
+kmeans = KMeans(n_clusters=kclusters, random_state=0).fit(
+    kl_grouped_clustering)
+
+# check cluster labels generated for each row in the dataframe
+kmeans.labels_
+
+# %% [markdown]
+# Add the cluster labels to the neighborhoods_venues_sorted dataframe. Let's create a new dataframe kl_merged which has the neighborhood details, cluster labels and the 10 most common venues in that neighborhood.
+
+# %%
+# add clustering labels
+neighborhoods_venues_sorted.insert(0, 'Cluster Labels', kmeans.labels_)
+
+kl_merged = kl_venues_top[kl_venues_top.columns[0:3]].drop_duplicates()
+kl_merged.reset_index(drop=True, inplace=True)
+
+# merge to add latitude/longitude for each neighborhood
+kl_merged = kl_merged.join(neighborhoods_venues_sorted.set_index(
+    'Neighborhood'), on='Neighborhood')
+
+kl_merged.head()
+
+# %% [markdown]
+# The data type of cluster labels is needed to be converted to int32 so that it can be used to check the clusters
+# %% [markdown]
+# Here we are checking the the number of neighborhoods inside each cluster
+
+# %%
+
+df = kl_merged.copy([['Cluster Labels', 'Neighborhood']])
+a = df.groupby(['Cluster Labels'])['Neighborhood'].value_counts()
+print(a)
