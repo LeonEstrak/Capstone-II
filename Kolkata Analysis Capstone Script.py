@@ -508,3 +508,68 @@ print(venues4.value_counts().head(10))
 # %%
 kl_merged.loc[kl_merged['Cluster Labels'] == 3,
               kl_merged.columns[[0] + list(range(4, kl_merged.shape[1]))]]
+
+# %% [markdown]
+# # Deliberation
+# Let's visulaize the top 5 most common venue categories in each of the cluster
+# %% [markdown]
+# pizza place,multiplex, fast food restaurant,hotel
+
+# %%
+df_list = [venues1, venues2, venues3, venues4]
+fig, axes = plt.subplots(2, 2)
+
+count = 0
+for r in range(2):
+    for c in range(2):
+        if count != 9:
+            df_list[count].value_counts().head().plot.barh(
+                ax=axes[r, c], width=0.5, figsize=(15, 10))
+            axes[r, c].set_title('Cluster {}'.format(count+1))
+            plt.sca(axes[r, c])
+            plt.xticks(np.arange(0, 40, 5))
+            plt.xlabel('No. of venues')
+            count += 1
+
+# fig.delaxes(ax = ax[0,0])
+fig.tight_layout()
+
+# %% [markdown]
+# This plot along with the above allocation and analysis of top 10 venues to cluster is used to suggest valuable information to Business Venturers.
+# %% [markdown]
+# ### Hotels
+#
+# Cluster 3 and Cluster 4 are the least popular with the lowest number of neighborhoods and venues hence opening a hotel here will not fetch the owner profits
+# Out of the most popular clusters i.e, Cluster 1 and Cluster 2, the neighborhoods in cluster 2 has the greatest number of hotels(30), hence opening one here is not the best choice.
+# Thus opening a hotel in Cluster 1 is most ideal as it has multiple popular neighborhood options and very few number of hotels(8).
+#
+# Potential neighborhoods to open a hotel in Cluster 1 are: Salt Lake City, Belgachia Metro Station,City Center Metro Station,City Centre Salt Lake.
+#
+# Alternatively if a quiet and less popular neighborhood is required Cluster 3 can also be suggested as it has multiple neighborhoods and restaurants for potential customer to eat.
+# Potential neighborhoods to open a hotel in Cluster 3 are:South City Mall,Tollygunge Metro Station and Alipore
+# %% [markdown]
+# ### Fast Food Restaurant
+#
+# Cluster 3 and Cluster 4 are the least popular with the lowest number of neighborhoods and venues hence opening a fast food restaurant here will not fetch the owner profits
+# Out of the most popular clusters i.e, Cluster 1 and Cluster 2, the neighborhoods in cluster 1 has the greatest number of fast food restaurants(15), hence opening one here is not ideal.
+# Thus opening a hotel in Cluster 2 is most ideal as it has multiple popular and most neighborhood options and no fast food restaurants.
+# This rarity of fast food restaurants in such a popular cluster can be utilized by business venturers to maxmize profits.
+#
+# Potential Neighborhoods are: Tollygunge Metro Station,Esplanade Metro Station,Fort William
+# %% [markdown]
+# ### Pizza Place
+#
+# Cluster 1 has the most number of Pizza Places, so it doesn't make any sense to open a Pizza Place there.
+# However Cluster 2 being the most popular and crowded place among all the clusters, and if it does have any pizza place it will be less than 8.
+# Hence the most popular place to open a pizza place is Cluster 2.
+# Alternatively Cluster 3 and Cluster 4 can also be suggested as Cluster  3 has only 5 and Cluster 4 does not have any. But as cluster 4 is the least popular it is probably not a good idea to open it there.
+#
+# Potential neighborhoods to open:Townhall, Esplanade Metro Station, Fort William
+# %% [markdown]
+# ### Multiplex
+#
+# The most popular clusters are crowded with multiplexes so opening a multiplex there will face a lot of competition.
+# Cluster 4 being the least lost popular cluster is still crowded with multiplexes(5).
+# Hence Cluster 3 is the most suitable to open a multiplex as it is relatively popular than Cluster 4 and even if it has multiplexes then they will be less than 3 therefore it will face less competition.
+#
+# Potential neighborhoods to open: Tollygunge Metro Station, Kalighat
