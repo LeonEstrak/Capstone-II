@@ -412,3 +412,99 @@ kl_merged.head()
 df = kl_merged.copy([['Cluster Labels', 'Neighborhood']])
 a = df.groupby(['Cluster Labels'])['Neighborhood'].value_counts()
 print(a)
+
+# %% [markdown]
+# ## Results
+#
+# Let’s examine the clusters and find all the venue categories that distinguish each cluster. Let's also print the ten most common venue category in each cluster.
+#
+
+# %%
+
+cluster1 = kl_merged.loc[kl_merged['Cluster Labels'] == 0, kl_merged.columns[[0] +
+                                                                             list(range(4, kl_merged.shape[1]))]]
+venues1 = (cluster1['1st Most Common Venue'].append(
+    cluster1['2nd Most Common Venue']).append(
+    cluster1['3rd Most Common Venue']).append(
+    cluster1['4th Most Common Venue']).append(
+    cluster1['5th Most Common Venue']).append(
+    cluster1['6th Most Common Venue']).append(
+    cluster1['7th Most Common Venue']).append(
+    cluster1['8th Most Common Venue']).append(
+    cluster1['9th Most Common Venue']).append(
+    cluster1['10th Most Common Venue']))
+
+print(venues1.value_counts().head(10))
+
+
+# %%
+kl_merged.loc[kl_merged['Cluster Labels'] == 0,
+              kl_merged.columns[[0] + list(range(4, kl_merged.shape[1]))]]
+
+
+# %%
+cluster2 = kl_merged.loc[kl_merged['Cluster Labels'] == 1, kl_merged.columns[[0] +
+                                                                             list(range(4, kl_merged.shape[1]))]]
+venues2 = (cluster2['1st Most Common Venue'].append(
+    cluster2['2nd Most Common Venue']).append(
+    cluster2['3rd Most Common Venue']).append(
+    cluster2['4th Most Common Venue']).append(
+    cluster2['5th Most Common Venue']).append(
+    cluster2['6th Most Common Venue']).append(
+    cluster2['7th Most Common Venue']).append(
+    cluster2['8th Most Common Venue']).append(
+    cluster2['9th Most Common Venue']).append(
+    cluster2['10th Most Common Venue']))
+
+print(venues2.value_counts().head(10))
+
+
+# %%
+kl_merged.loc[kl_merged['Cluster Labels'] == 1,
+              kl_merged.columns[[0] + list(range(4, kl_merged.shape[1]))]]
+
+
+# %%
+
+cluster3 = kl_merged.loc[kl_merged['Cluster Labels'] == 2, kl_merged.columns[[0] +
+                                                                             list(range(4, kl_merged.shape[1]))]]
+venues3 = (cluster3['1st Most Common Venue'].append(
+    cluster3['2nd Most Common Venue']).append(
+    cluster3['3rd Most Common Venue']).append(
+    cluster3['4th Most Common Venue']).append(
+    cluster3['5th Most Common Venue']).append(
+    cluster3['6th Most Common Venue']).append(
+    cluster3['7th Most Common Venue']).append(
+    cluster3['8th Most Common Venue']).append(
+    cluster3['9th Most Common Venue']).append(
+    cluster3['10th Most Common Venue']))
+
+print(venues3.value_counts().head(10))
+
+
+# %%
+kl_merged.loc[kl_merged['Cluster Labels'] == 2,
+              kl_merged.columns[[0] + list(range(4, kl_merged.shape[1]))]]
+
+
+# %%
+
+cluster4 = kl_merged.loc[kl_merged['Cluster Labels'] == 3, kl_merged.columns[[0] +
+                                                                             list(range(4, kl_merged.shape[1]))]]
+venues4 = (cluster4['1st Most Common Venue'].append(
+    cluster4['2nd Most Common Venue']).append(
+    cluster4['3rd Most Common Venue']).append(
+    cluster4['4th Most Common Venue']).append(
+    cluster4['5th Most Common Venue']).append(
+    cluster4['6th Most Common Venue']).append(
+    cluster4['7th Most Common Venue']).append(
+    cluster4['8th Most Common Venue']).append(
+    cluster4['9th Most Common Venue']).append(
+    cluster4['10th Most Common Venue']))
+
+print(venues4.value_counts().head(10))
+
+
+# %%
+kl_merged.loc[kl_merged['Cluster Labels'] == 3,
+              kl_merged.columns[[0] + list(range(4, kl_merged.shape[1]))]]
