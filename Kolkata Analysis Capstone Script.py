@@ -573,3 +573,27 @@ fig.tight_layout()
 # Hence Cluster 3 is the most suitable to open a multiplex as it is relatively popular than Cluster 4 and even if it has multiplexes then they will be less than 3 therefore it will face less competition.
 #
 # Potential neighborhoods to open: Tollygunge Metro Station, Kalighat
+# %%
+# create map
+kolkata_clusters_map = folium.Map(
+    location=[latitude, longitude], zoom_start=11)
+
+# set color scheme for the clusters
+colors_array = cm.rainbow(np.linspace(0, 1, kclusters))
+rainbow = [colors.rgb2hex(i) for i in colors_array]
+
+# add markers to the map
+markers_colors = []
+for lat, lon, poi, cluster in zip(kl_merged['Neighborhood Latitude'], kl_merged['Neighborhood Longitude'], kl_merged['Neighborhood'], kl_merged['Cluster Labels']):
+    label = folium.Popup(str(poi) + ' Cluster ' +
+                         str(cluster+1), parse_html=True)
+    folium.CircleMarker(
+        [lat, lon],
+        radius=5,
+        popup=label,
+        color=rainbow[cluster-1],
+        fill=True,
+        fill_color=rainbow[cluster-1],
+        fill_opacity=0.7).add_to(kolkata_clusters_map)
+
+kolkata_clusters_map
